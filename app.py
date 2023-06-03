@@ -1,9 +1,16 @@
 from flask import Flask,request,json,jsonify,make_response
 import requests
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
-app = Flask(__name__)               
+api_v1_cors_config = {
+    "origins": "*",
+    "methods": ["GET", "POST"],
+    #  "allow_headers": ["Authorization","X-Forwarded-For"]
+}
+app = Flask(__name__)     
+CORS(app, resources={r"/v1/*": api_v1_cors_config})          
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://rmlhackathon:2u4|BNdX@13.232.118.161:60198/hackathon'
 db= SQLAlchemy(app)
 
