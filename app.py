@@ -10,7 +10,7 @@ class UserDetails(db.Model):
     name = db.Column(db.String(100), nullable=False)
     pancard = db.Column(db.String(20), nullable=False)
     mobileNumber=db.Column(db.String(20),nullable=False)
-    verified=db.Column(db.Boolean, nullable=True)
+    verified=db.Column(db.String(20), nullable=True)
     timestamps=db.Column(db.DateTime, nullable=True)
     vendor=db.Column(db.String(100), nullable=False)
 
@@ -25,14 +25,12 @@ class UserDetails(db.Model):
 @app.route('/adduserdetail', methods=['POST'])
 def adduserdetail():
     data=json.loads(request.data)
-    print(data)
     user=UserDetails(data["name"],data["pancard"],data["mobileNumber"],data["vendor"])
     try:
         db.session.add(user)
         db.session.commit()
     except Exception as ex:       
         return {"Status":"Failure"}
-    user=UserDetails.query.filter_by(pancard=data["pancard"]).first()
     return {"Status":"Success", "UserID":user.id} 
 
 
