@@ -35,7 +35,8 @@ class UserDetails(db.Model):
         self.verified=None
         self.updated_timestamp=func.now()
         self.vendor=vendor
-
+        self.wa_request_id=None
+        
     def to_json(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
@@ -43,9 +44,6 @@ class UserDetails(db.Model):
 @cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def adduserdetail():
     data=json.loads(request.data)
-    check_user=UserDetails.query.filter_by(verified=None,mobileNumber=data["mobileNumber"],vendor=data["vendor"]).all()
-    if check_user:
-        return {"Status":"Failure", "Message":"Already Registered User."}
     user=UserDetails(data["name"],data["pancard"],data["mobileNumber"],data["vendor"])
     try:
         db.session.add(user)
