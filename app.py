@@ -14,7 +14,7 @@ app = Flask(__name__)
 def after_request(response):
     response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response 
-CORS(app, resources={r"/v1/*": api_v1_cors_config})          
+CORS(app, resources={r"/*": api_v1_cors_config})          
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://rmlhackathon:2u4|BNdX@13.232.118.161:60198/hackathon'
 db= SQLAlchemy(app)
 
