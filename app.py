@@ -87,6 +87,7 @@ def sendmessage():
                 "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGVtbyIsInVzZXJuYW1lIjoiUm1sZGVtb3Rlc3QiLCJleHAiOjE5OTY3NTQ0NjYuMTY1LCJlbWFpbCI6ImFrYXNyYW5qYW5AZ21haWwuY29tIiwib3JpZ19pYXQiOjE1NzEwNDg0NjQsImN1c3RvbWVyX2lkIjoiOWlyNURnN2J2c0NBIiwiaWF0IjoxNjg1NzE0NDY2fQ.3xHE1hVmZ734M6drYG3PWqoXM1qdU1ne7sB5XmGyGGk",
                 "Content-Type": "application/json"
             })
+        print(response.json)
         return {"Status": "Success"}
 
     except Exception as ex:
