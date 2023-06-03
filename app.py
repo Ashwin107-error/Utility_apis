@@ -62,7 +62,7 @@ def getuserdetail(input_number):
         return {"Status":"Failure"}
     
 @app.route("/send_message", methods=["POST"])
-@cross_origin(origin='*',headers=['Content- Type','Authorization'])
+@cross_origin(origin='*')
 def sendmessage():
     try:
         data = request.json
