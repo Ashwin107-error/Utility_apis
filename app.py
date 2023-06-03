@@ -2,7 +2,7 @@ from flask import Flask,request,json
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)               
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hackathon.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://rmlhackathon:2u4|BNdX@13.232.118.161:60198/hackathon'
 db= SQLAlchemy(app)
 
 class UserDetails(db.Model):
