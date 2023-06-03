@@ -1,6 +1,6 @@
 from flask import Flask,request,json,jsonify,make_response
 import requests
-from flask_cors import CORS
+from flask_cors import CORS,cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
@@ -39,6 +39,7 @@ class UserDetails(db.Model):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
 @app.route('/adduserdetail', methods=['POST'])
+@cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def adduserdetail():
     data=json.loads(request.data)
     user=UserDetails(data["name"],data["pancard"],data["mobileNumber"],data["vendor"])
@@ -51,6 +52,7 @@ def adduserdetail():
 
 
 @app.route('/getuserdetail/<string:input_number>', methods=['GET'])
+@cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def getuserdetail(input_number):
     user=UserDetails.query.filter_by(mobileNumber=input_number,verified=None).all()
     try:
@@ -60,6 +62,7 @@ def getuserdetail(input_number):
         return {"Status":"Failure"}
     
 @app.route("/send_message", methods=["POST"])
+@cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def sendmessage():
     try:
         data = request.json
