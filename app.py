@@ -92,6 +92,7 @@ def sendmessage():
     
 
 @app.route('/getUser/<int:input_user_id>', methods=['GET'])
+@cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def getUser(input_user_id):
     userInfo=UserDetails.query.filter_by(id=input_user_id).all()
     try:
