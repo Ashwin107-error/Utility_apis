@@ -42,6 +42,9 @@ class UserDetails(db.Model):
 @cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def adduserdetail():
     data=json.loads(request.data)
+    check_user=UserDetails.query.filter_by(verified=None,mobileNumber=data["mobileNumber"],vendor=data["vendor"]).all()
+    if check_user:
+        return {"Status":"Failure", "Message":"Already Registered User."}
     user=UserDetails(data["name"],data["pancard"],data["mobileNumber"],data["vendor"])
     try:
         db.session.add(user)
