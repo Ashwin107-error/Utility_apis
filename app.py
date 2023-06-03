@@ -16,7 +16,7 @@ def after_request(response):
     return response 
 CORS(app, resources={r"/*": api_v1_cors_config})          
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://rmlhackathon:2u4|BNdX@13.232.118.161:60198/hackathon'
-db= SQLAlchemy(app)
+db = SQLAlchemy(app)
 
 class UserDetails(db.Model):
     id = db.Column(db.Integer,primary_key=True)
@@ -26,6 +26,7 @@ class UserDetails(db.Model):
     verified=db.Column(db.String(20), nullable=True)
     updated_timestamp=db.Column(db.DateTime, nullable=False)
     vendor=db.Column(db.String(100), nullable=False)
+    wa_request_id = db.Column(db.String(100),nullable=True)
 
     def __init__(self,name,pancard,mobileNumber,vendor):
         self.name=name
@@ -69,25 +70,31 @@ def getuserdetail(input_number):
 def sendmessage():
     try:
         data = request.json
-        print(data,"LATEST HTTTTTTTT")
-        name = data["name"]
-        phone_no = data["mobile"]
+        uid = data['id']
+        user=UserDetails.query.filter_by(id=uid).first()
+
         payload = {
-            "phone": phone_no,
+            "phone": '+91'+user.mobileNumber,
             "media": {
                 "type": "media_template",
                 "template_name": "test_gaurav_7",
                 "lang_code": "en",
-                "body": [{"text": name}],
+                "body": [{"text": user.name}],
             },
         }
+
+        
         url = 'https://apis.rmlconnect.net/wba/v1/messages'
-        params = payload
         response = requests.post(url,data=json.dumps(payload),headers = {
                 "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGVtbyIsInVzZXJuYW1lIjoiUm1sZGVtb3Rlc3QiLCJleHAiOjE5OTY3NTQ0NjYuMTY1LCJlbWFpbCI6ImFrYXNyYW5qYW5AZ21haWwuY29tIiwib3JpZ19pYXQiOjE1NzEwNDg0NjQsImN1c3RvbWVyX2lkIjoiOWlyNURnN2J2c0NBIiwiaWF0IjoxNjg1NzE0NDY2fQ.3xHE1hVmZ734M6drYG3PWqoXM1qdU1ne7sB5XmGyGGk",
                 "Content-Type": "application/json"
             })
-        print(response.json)
+        response = (response.json())
+        request_id = response['request_id']
+        
+        user.wa_request_id=request_id
+        user.updated_timestamp=func.now()
+        db.session.commit()
         return {"Status": "Success"}
 
     except Exception as ex:
