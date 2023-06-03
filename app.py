@@ -1,4 +1,5 @@
 from flask import Flask,request,json,jsonify,make_response
+import requests
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
@@ -46,6 +47,33 @@ def getuserdetail(input_number):
         return make_response(jsonify({"result": result}), 200)
     else: 
         return {"Status":"Failure"}
+    
+@app.route("/send_message", methods=["POST"])
+def sendmessage():
+    try:
+        data = request.json
+        name = data["name"]
+        phone_no = data["mobile"]
+        payload = {
+            "phone": phone_no,
+            "media": {
+                "type": "media_template",
+                "template_name": "test_gaurav_7",
+                "lang_code": "en",
+                "body": [{"text": name}],
+            },
+        }
+        url = 'https://apis.rmlconnect.net/wba/v1/messages'
+        params = payload
+        response = requests.post(url,data=json.dumps(payload),headers = {
+                "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGVtbyIsInVzZXJuYW1lIjoiUm1sZGVtb3Rlc3QiLCJleHAiOjE5OTY3NTQ0NjYuMTY1LCJlbWFpbCI6ImFrYXNyYW5qYW5AZ21haWwuY29tIiwib3JpZ19pYXQiOjE1NzEwNDg0NjQsImN1c3RvbWVyX2lkIjoiOWlyNURnN2J2c0NBIiwiaWF0IjoxNjg1NzE0NDY2fQ.3xHE1hVmZ734M6drYG3PWqoXM1qdU1ne7sB5XmGyGGk",
+                "Content-Type": "application/json"
+            })
+        return {"Status": "Success"}
+
+    except Exception as ex:
+        print(ex)
+        return {"status": "Failure"}
 
 if __name__=="__main__":
     app.run(debug=True)
