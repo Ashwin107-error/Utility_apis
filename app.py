@@ -42,10 +42,10 @@ def adduserdetail():
 @app.route('/getuserdetail/<string:input_number>', methods=['GET'])
 def getuserdetail(input_number):
     user=UserDetails.query.filter_by(mobileNumber=input_number,verified=None).all()
-    if user:
+    try:
         result = [row.to_json() for row in user]
         return make_response(jsonify({"result": result}), 200)
-    else: 
+    except: 
         return {"Status":"Failure"}
     
 @app.route("/send_message", methods=["POST"])
@@ -74,6 +74,16 @@ def sendmessage():
     except Exception as ex:
         print(ex)
         return {"status": "Failure"}
+    
+
+@app.route('/getUser/<int:input_user_id>', methods=['GET'])
+def getUser(input_user_id):
+    userInfo=UserDetails.query.filter_by(id=input_user_id).all()
+    try:
+        result = [row.to_json() for row in userInfo]
+        return make_response(jsonify({"result": result}), 200)
+    except Exception as ex:
+        return {"Status":"Failure"}
 
 if __name__=="__main__":
     app.run(debug=True)
