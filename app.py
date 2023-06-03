@@ -66,6 +66,7 @@ def getuserdetail(input_number):
 def sendmessage():
     try:
         data = request.json
+        print(data,"LATEST HTTTTTTTT")
         name = data["name"]
         phone_no = data["mobile"]
         payload = {
